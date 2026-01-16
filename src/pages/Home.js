@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import BASE_URL from "../config";
 import { Link } from "react-router-dom";
 
 export default function Home() {
@@ -10,12 +11,12 @@ export default function Home() {
   }, []);
 
   const loadUsers = async () => {
-    const result = await axios.get("http://localhost:8080/users");
+    const result = await axios.get(`${BASE_URL}/user`); // ✅ FIXED
     setUsers(result.data);
   };
 
   const deleteUser = async (id) => {
-    await axios.delete(`http://localhost:8080/user/${id}`);
+    await axios.delete(`${BASE_URL}/user/${id}`);
     loadUsers();
   };
 
@@ -47,7 +48,10 @@ export default function Home() {
                   <Link className="btn btn-outline-primary btn-sm mx-1" to={`/edituser/${user.id}`}>
                     ✏️ Edit
                   </Link>
-                  <button className="btn btn-danger btn-sm mx-1" onClick={() => deleteUser(user.id)}>
+                  <button
+                    className="btn btn-danger btn-sm mx-1"
+                    onClick={() => deleteUser(user.id)}
+                  >
                     🗑️ Delete
                   </button>
                 </td>
