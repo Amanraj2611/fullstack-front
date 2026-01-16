@@ -1,6 +1,6 @@
 import axios from "axios";
-import BASE_URL from "../config"; 
-import React, { useEffect,useState } from "react";
+import BASE_URL from "../config";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 
 export default function ViewUser() {
@@ -12,16 +12,16 @@ export default function ViewUser() {
 
   const { id } = useParams();
 
+  // ✅ FIX 1
+  const loadUser = useCallback(async () => {
+    const result = await axios.get(`${BASE_URL}/user/${id}`);
+    setUser(result.data);
+  }, [id]);
+
+  // ✅ FIX 2
   useEffect(() => {
     loadUser();
-  }, []);
-
-  const loadUser = async () => {
-  //  const result = await axios.get(`http://localhost:8080/user/${id}`);
-    const result = await axios.get(`${BASE_URL}/user/${id}`);
-
-    setUser(result.data);
-  };
+  }, [loadUser]);
 
   return (
     <div className="container">
@@ -34,21 +34,19 @@ export default function ViewUser() {
               Details of user id : {user.id}
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
-                  <b>Name:</b>
-                  {user.name}
+                  <b>Name:</b> {user.name}
                 </li>
                 <li className="list-group-item">
-                  <b>UserName:</b>
-                  {user.username}
+                  <b>Username:</b> {user.username}
                 </li>
                 <li className="list-group-item">
-                  <b>Email:</b>
-                  {user.email}
+                  <b>Email:</b> {user.email}
                 </li>
               </ul>
             </div>
           </div>
-          <Link className="btn btn-primary my-2" to={"/"}>
+
+          <Link className="btn btn-primary my-2" to="/">
             Back to Home
           </Link>
         </div>
